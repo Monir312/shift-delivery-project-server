@@ -17,7 +17,15 @@ const crypto = require('crypto');
 
 const admin = require("firebase-admin");
 
-const serviceAccount = require("./zap-shift-delivery-project-firebase-admin.json");
+
+const decoded = Buffer.from(process.env.FB_SERVICE_KEY, "base64").toString("utf8");
+
+const serviceAccount = JSON.parse(decoded);
+
+// newline fix (VERY IMPORTANT)
+serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, '\n');
+
+// const serviceAccount = require("./zap-shift-delivery-project-firebase-admin.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
@@ -36,8 +44,6 @@ function generateTrackingId() {
 // middleware 
 app.use(express.json());
 app.use(cors());
-
-
 
 
 
@@ -624,7 +630,6 @@ async function run() {
 
 
       const cursor = ridersCollection.find(query);
-      3
       const result = await cursor.toArray();
       res.send(result);
     })
