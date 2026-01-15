@@ -17,15 +17,7 @@ const crypto = require('crypto');
 
 const admin = require("firebase-admin");
 
-
-const decoded = Buffer.from(process.env.FB_SERVICE_KEY, "base64").toString("utf8");
-
-const serviceAccount = JSON.parse(decoded);
-
-// newline fix (VERY IMPORTANT)
-serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, '\n');
-
-// const serviceAccount = require("./zap-shift-delivery-project-firebase-admin.json");
+const serviceAccount = require("./zap-shift-delivery-project-firebase-admin.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
@@ -747,10 +739,10 @@ async function run() {
 
 
     // Send a ping to confirm a successful connection
-    // await client.db("admin").command({
-    //   ping: 1
-    // });
-    // console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    await client.db("admin").command({
+      ping: 1
+    });
+    console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
